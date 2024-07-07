@@ -76,27 +76,28 @@ func w4(w io.Writer, b Bitsy) error {
 		fmt.Fprintf(w, "// %s\n", c)
 	}
 
-	fmt.Fprintf(w, "\nconst %s = enum {\n", b.Name)
+	fmt.Fprintf(w, "\npub const %s = enum {\n", b.Name)
 
 	for _, t := range b.Tiles {
 		fmt.Fprintln(w, "    "+t.Name+",")
 	}
 
-	fmt.Fprintln(w, "};")
 	fmt.Fprintln(w, "")
 
-	fmt.Fprintf(w, "pub fn sprite(self: %s) [8]u8 {\n", b.Name)
-	fmt.Fprintf(w, "   return switch (self) {\n")
+	fmt.Fprintf(w, "    pub fn sprite(self: %s) [8]u8 {\n", b.Name)
+	fmt.Fprintf(w, "       return switch (self) {\n")
 
 	for _, t := range b.Tiles {
-		fmt.Fprintf(w, "        .%s => [8]u8{\n", t.Name)
+		fmt.Fprintf(w, "            .%s => [8]u8{\n", t.Name)
 		for _, d := range t.Data {
-			fmt.Fprintf(w, "            0b%s,\n", d)
+			fmt.Fprintf(w, "                0b%s,\n", d)
 		}
-		fmt.Fprintln(w, "        },")
+		fmt.Fprintln(w, "            },")
 	}
-	fmt.Fprintln(w, "    };")
-	fmt.Fprintln(w, "}")
+	fmt.Fprintln(w, "        };")
+	fmt.Fprintln(w, "    }")
+
+	fmt.Fprintln(w, "};")
 
 	return nil
 }
