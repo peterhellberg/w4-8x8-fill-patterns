@@ -10,12 +10,14 @@ in [Zig](https://ziglang.org/) :zap:
 
 ## Usage
 
-| Key            |                                        |
-|---------------:|----------------------------------------|
-| **Z**          | Next palette
-| **X**          | Invert colors
-| **Up/Down**    | Switch “gallery”
-| **Left/Right** | Switch “pattern” in current “gallery”
+| Key                  |                                        |
+|---------------------:|----------------------------------------|
+| **Z**                | Next palette
+| **X**                | Invert colors
+| **Up/Down**          | Switch “gallery”
+| **Left/Right**       | Switch “pattern” in current “gallery”
+| **Held Left Mouse**  | Show zoomed in “pattern”
+| **Held Right Mouse** | Clear background
 
 ## Development
 
