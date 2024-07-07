@@ -17,18 +17,20 @@ const Waves = @import("8x8/Waves.zig").Waves;
 const Woven = @import("8x8/Woven.zig").Woven;
 
 const Cart = struct {
+    mouse: w4.Mouse = .{},
     button: w4.Button = .{},
 
     palette: Palette = .OneBitMonitorGlow,
     gallery: Gallery = .Nature,
     number: i32 = 16,
+    color: u16 = 0x12,
 
     fn start(self: *Cart) void {
         w4.palette(self.palette.colors());
-        w4.color(0x12);
     }
 
     fn update(self: *Cart) void {
+        self.mouse.update();
         self.button.update();
 
         if (self.button.released(0, w4.BUTTON_UP)) self.prevGallery();
@@ -37,20 +39,28 @@ const Cart = struct {
         if (self.button.released(0, w4.BUTTON_RIGHT)) self.nextPattern();
         if (self.button.released(0, w4.BUTTON_2)) self.nextPalette();
         if (self.button.released(0, w4.BUTTON_1)) {
-            w4.color(if (w4.DRAW_COLORS.* == 0x12) 0x21 else 0x12);
+            self.color = if (self.color == 0x12) 0x21 else 0x12;
         }
     }
 
     fn draw(self: *Cart) void {
+        w4.color(self.color);
+
         const s = self.gallery.sprite(self.number);
 
-        for (0..400) |i| {
-            const n: i32 = @intCast(i);
-            const x: i32 = @mod(n, 20) * 8;
-            const y: i32 = @divTrunc(n, 20) * 8;
+        if ((self.mouse.held(w4.MOUSE_RIGHT))) {
+            w4.clear(if (self.color == 0x12) 0x2 else 0x1);
+        } else {
+            for (0..400) |i| {
+                const n: i32 = @intCast(i);
+                const x: i32 = @mod(n, 20) * 8;
+                const y: i32 = @divTrunc(n, 20) * 8;
 
-            blit(x, y, s);
+                blit(x, y, s);
+            }
         }
+
+        if (self.mouse.held(w4.MOUSE_LEFT)) zoom(self.color, s);
     }
 
     fn nextPalette(self: *Cart) void {
@@ -195,4 +205,21 @@ const Palette = enum {
 
 fn blit(x: i32, y: i32, sprite: [8]u8) void {
     w4.blit(&sprite, x, y, 8, 8, w4.BLIT_1BPP);
+}
+
+fn zoom(c: u16, sprite: [8]u8) void {
+    w4.color(if (c == 0x12) 0x21 else 0x12);
+
+    for (0.., sprite) |r, u| {
+        const y: i32 = @intCast(r * 20);
+
+        if (u & 0b00000001 != 0) w4.rect(7 * 20, y, 19, 19);
+        if (u & 0b00000010 != 0) w4.rect(6 * 20, y, 19, 19);
+        if (u & 0b00000100 != 0) w4.rect(5 * 20, y, 19, 19);
+        if (u & 0b00001000 != 0) w4.rect(4 * 20, y, 19, 19);
+        if (u & 0b00010000 != 0) w4.rect(3 * 20, y, 19, 19);
+        if (u & 0b00100000 != 0) w4.rect(2 * 20, y, 19, 19);
+        if (u & 0b01000000 != 0) w4.rect(1 * 20, y, 19, 19);
+        if (u & 0b10000000 != 0) w4.rect(0 * 20, y, 19, 19);
+    }
 }
