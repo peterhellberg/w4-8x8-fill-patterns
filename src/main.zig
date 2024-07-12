@@ -60,7 +60,9 @@ const Cart = struct {
             }
         }
 
-        if (self.mouse.held(w4.MOUSE_LEFT)) zoom(self.color, s);
+        if (self.mouse.held(w4.MOUSE_LEFT)) {
+            zoom(self.gallery, self.color, s);
+        }
     }
 
     fn nextPalette(self: *Cart) void {
@@ -207,7 +209,7 @@ fn blit(x: i32, y: i32, sprite: [8]u8) void {
     w4.blit(&sprite, x, y, 8, 8, w4.BLIT_1BPP);
 }
 
-fn zoom(c: u16, sprite: [8]u8) void {
+fn zoom(g: Gallery, c: u16, sprite: [8]u8) void {
     w4.color(if (c == 0x12) 0x21 else 0x12);
 
     for (0.., sprite) |r, u| {
@@ -222,4 +224,6 @@ fn zoom(c: u16, sprite: [8]u8) void {
         if (u & 0b01000000 != 0) w4.rect(1 * 20, y, 19, 19);
         if (u & 0b10000000 != 0) w4.rect(0 * 20, y, 19, 19);
     }
+
+    w4.text(@tagName(g), 0, 0);
 }
