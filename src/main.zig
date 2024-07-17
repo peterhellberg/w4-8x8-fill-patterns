@@ -185,13 +185,16 @@ const Palette = enum {
     IBM51, // https://lospec.com/palette-list/ibm-51
 
     fn colors(self: Palette) [4]u32 {
-        return switch (self) {
-            .OneBitMonitorGlow => .{ 0xf0f6f0, 0x222323, 0, 0 },
-            .ObraDinnIBM8503 => .{ 0xebe5ce, 0x2e3037, 0, 0 },
-            .MacPaint => .{ 0x8bc8fe, 0x051b2c, 0, 0 },
-            .Note2C => .{ 0xedf2e2, 0x222a3d, 0, 0 },
-            .IBM51 => .{ 0xd3c9a1, 0x323c39, 0, 0 },
+        const p: [2]u32 = switch (self) {
+            .OneBitMonitorGlow => .{ 0xf0f6f0, 0x222323 },
+            .ObraDinnIBM8503 => .{ 0xebe5ce, 0x2e3037 },
+            .MacPaint => .{ 0x8bc8fe, 0x051b2c },
+            .Note2C => .{ 0xedf2e2, 0x222a3d },
+            .IBM51 => .{ 0xd3c9a1, 0x323c39 },
         };
+
+        // Return w4 compatible palette
+        return .{ p[0], p[1], 0, 0 };
     }
 
     fn next(self: Palette) Palette {
