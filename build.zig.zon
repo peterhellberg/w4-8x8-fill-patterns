@@ -1,5 +1,6 @@
 .{
-    .name = "w4-8x8-fill-patterns",
+    .name = .w4_8x8_fill_patterns,
+    .fingerprint = 0xcd164bbdb7002101,
     .version = "0.0.0",
     .paths = .{""},
     .dependencies = .{
